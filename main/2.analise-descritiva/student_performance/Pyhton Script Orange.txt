@@ -1,0 +1,41 @@
+import Orange
+import numpy as np
+from scipy import stats
+
+index = 0
+X = in_data.X
+
+for variable in in_data.domain.variables:
+
+    var_name = variable.name
+    var_index = index
+    index += 1
+
+    if isinstance(variable, Orange.data.ContinuousVariable):
+
+        print("\n >>>>> ", var_name)
+        print( "mean()", X[ :, var_index ].mean() ) # média (medida de tendência central comum)
+        print( "std()", X[ :, var_index ].std() ) # desvio padrão (medida de dispersão, crucial, indicando o quão distantes os valores se encontram da média)
+        print( "std() / mean() %", X[ :, var_index ].std() / X[ :, var_index ].mean() * 100 ) # desvio padrão em relação a média em porcentagem
+        
+        print( "median()", np.median( X[ :, var_index ] ) ) # mediana (medida de tendência central, divide um conjunto de dados em duas partes iguais (na metade) :: 50% | 50%)
+        
+        q1 = np.percentile( X[ :, var_index ], 25 )  # 1 Quartil (25%) # quartil (medida de posição relativa, dispõe de três valores Q1, Q2 e Q3 que dividem os dados em quatro partes :: 25% | 25% | 25 % | 25% )
+        q2 = np.percentile( X[ :, var_index ], 50 )  # 2 Quartil (mediana, 50%)
+        q3 = np.percentile( X[ :, var_index ], 75 )  # 3 Quartil (75%)
+        print( "Q1", q1 )
+        print( "Q2", q2 )
+        print( "Q3", q3 )
+        
+        k = 0
+        score_z = ( X[ k, var_index ] - X[ :, var_index ].mean() ) / X[ :, var_index ].std() # escore z (medida de posição relativa, indica quantos desvios padrão um valor específico se encontra acima ou abaixo da média )
+        print( "score z da intância de dados k", X[ k, var_index ], score_z ) 
+        
+        print( "skew()", stats.skew( X[ :, var_index ] ) ) # assimetria - skewness (medida de forma, indica como a distribuição de valores de uma variável desvia do seu ponto central, a média, quando positiva, a concentração de dados tende para a esquerda; caso seja negativa, tende para a direita)
+        
+        print( "kurtosis()", stats.kurtosis( X[ :, var_index ] ) ) # curtose - kurtosis (medida de forma, indica a forma do gráfico da distribuição de valores, zero apresenta um formato semelhante a distribuição normal, positivo apresenta formato mais afunilado (pico) e valores se encontram mais agrupados, negativo o ponto central da função é achatado e a dispersão dos valores é maior)
+
+    elif isinstance(variable, Orange.data.DiscreteVariable): pass
+    elif isinstance(variable, Orange.data.StringVariable): pass
+    else: pass
+
